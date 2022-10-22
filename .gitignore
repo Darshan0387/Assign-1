@@ -1,129 +1,154 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
+#Program for registration system
+import re
 
-# C extensions
-*.so
+def register():
+    db = open("database.txt", "r")
+    Username = input("create username (make sure its in this format ___@xmail.com: ")
+    d = []
+    for line in db:
+        x = line.split(".")
+        d.append(x[0])
 
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-pip-wheel-metadata/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
+    if Username in d:
+        print("Username already exists")
+        register()
+    elif Username.count('@') != 1 and Username.count(".") != 1:
+        print("error: Enter user name in the given format")
+        register()
 
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
+    elif ((Username.index('@')) - (Username.index(".")))== 1:
+        print("error: Enter user name in the given format")
+        register()
 
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
+    elif Username[0] in range(0 , 9):
+        print("You cannot start with a Number or Special Character")
+        register()
 
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
+    elif Username[0] == re.compile('[@_!#$%^&*()<>?/\|}{~:]'):
+        print("You cannot start with a Special character")
+        register()
 
-# Translations
-*.mo
-*.pot
+    else:
+        print("Username created")
 
-# Django stuff:
-*.log
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
+    Password = input("your password must between 5- 16 characters "
+                     "contain atleast one Capital letter, numerical value and a special character:")
+    s = False
 
-# Flask stuff:
-instance/
-.webassets-cache
+    if len(Password) < 5 and len(Password) >16:
+        print("Create Password with length between 5 an 16, Try Again")
+        register()
 
-# Scrapy stuff:
-.scrapy
+    if len(Password) < 5 and len(Password) <16:
+        z,x,c,v = 0,0,0,0,
 
-# Sphinx documentation
-docs/_build/
+        for i in Password:
+            if i.isdigit():
+                v += 1
+            if i.islower():
+                z += 1
+            if i.isupper():
+                x += 1
+            if i == re.compile('[@_!#$%^&*()<>?/\|}{~:]'):
+                c += 1
+            if ( z >=1 and x >=1 and c>=1 and v >=1 and z+x+c+v == len(Password)):
+                s = True
 
-# PyBuilder
-target/
+    if s:
+        Password1 = input("Confirm Password: " )
+        while ( Password != Password1):
+              print("Paswords do not match")
+              Password1 = input("Try again: ")
 
-# Jupyter Notebook
-.ipynb_checkpoints
+    else:
+        print("Try again")
+        register()
 
-# IPython
-profile_default/
-ipython_config.py
+    file = open("database.txt","a")
+    file.write("Username" + "," + "Password" + "\n")
+    file.close()
+    login()
 
-# pyenv
-.python-version
+def login():
+      X = input("Enter your Username")
+      X = X.strip()
+      db = open("database.txt", "r")
+      d = []
+      for line in db:
+           x = line.split(",")
+           d.append(x[0])
 
-# pipenv
-#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
-#   However, in case of collaboration, if having platform-specific dependencies or dependencies
-#   having no cross-platform support, pipenv may install dependencies that don't work, or not
-#   install all needed dependencies.
-#Pipfile.lock
+      if X in d:
+          Y = input("Please Enter your password: ")
+          Y = Y.strip()
+          file1 = open("database.txt.txt", "r").readlines()
+          for x in file1:
+              x = x.strip()
+              info = x.split(",")
+              if X == info[0] and Y == info[1]:
+                  print("Welcome in the digital world")
+              else:
+                  F = input("Forgot Password [Y/N] : ")
 
-# PEP 582; used by e.g. github.com/David-OConnor/pyflow
-__pypackages__/
+                  if F == "N":
+                      print("try")
+                      login()
 
-# Celery stuff
-celerybeat-schedule
-celerybeat.pid
+                  if F == "Y":
+                      b = input(
+                          "Create your new password with atleast one capital letter one integer and one special character: ")
+                      s = False
 
-# SageMath parsed files
-*.sage.py
+                      if len(b) < 5 and len(b) > 16:
+                          print("Create Password with length between 5 an 16, Try Again")
+                          register()
 
-# Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
+                      if len(b) > 5 and len(b) < 16:
+                          l, u, p, d = 0, 0, 0, 0
+                          for i in b:
+                              if i.isdigit():
+                                  d += 1
+                              if i.islower():
+                                  l += 1
+                              if i.isupper():
+                                  u += 1
+                              if (
+                                      i == '@' or i == '$' or i == '_' or i == '%' or i == '!' or i == '#' or i == '*' or i == '&'):
+                                  p += 1
+                              if (l >= 1 and u >= 1 and p >= 1 and d >= 1 and l + p + u + d == len(b)):
+                                  s = True
 
-# Spyder project settings
-.spyderproject
-.spyproject
+                      if s:
+                          c = input("Confirm Password: ")
+                          while (c != b):
+                              print("Password not match, Try Again")
+                              c = input("Try Again: ")
 
-# Rope project settings
-.ropeproject
+                      else:
+                          print("Sorry,Try again to login")
+                          login()
 
-# mkdocs documentation
-/site
+                      file = open("database.txt", "w")
+                      file.write(X + "," + b + "\n")
+                      file.close()
 
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
 
-# Pyre type checker
-.pyre/
+      else:
+          print("Unregister user you need to register first")
+          register()
+
+
+def welcome():
+    print("WELCOME to our page")
+    print("For accessing you need to login and if new user than you need to register")
+    W = input("Login|Register[L/R]: ")
+    if W == "L":
+        login()
+    elif W == "R":
+        register()
+    else:
+        print("Enter in proper manner only please")
+        welcome()
+
+
+welcome()
